@@ -1,6 +1,7 @@
 import java.util.*;
 
 public class Polynomial {
+    private final static Rational ZERO = new Rational(0);
 
     //Создаем Map, содержащую ключом степень одночлена полинома и значением
     //его коэффициент(сразу сортируем в порядке убывания)
@@ -18,7 +19,7 @@ public class Polynomial {
             if (pair.getKey() < 0) {
                 throw new ArithmeticException("a polynomial contains a degree that is less than zero");
             }
-            if (pair.getValue().toString().equals("0")){
+            if (pair.getValue().equals(ZERO)){
                 pairs.remove();
             }
         }
@@ -29,14 +30,14 @@ public class Polynomial {
 
     //Сравнение двух полиномов на равенство
 
-    public boolean equal(Polynomial other) {
+    public boolean equals(Polynomial other) {
         return this.members.toString().equals(other.members.toString());
     }
 
     //Расчет значения полинома по заданному целому числу x
 
     public Rational value(int x){
-        Rational result = new Rational(0);
+        Rational result = ZERO;
         for (Integer degree: members.keySet()) {
             int count  = 1;
             for (int i = degree; i > 0; i--) {
@@ -114,7 +115,7 @@ public class Polynomial {
     public Polynomial residue(Polynomial other){
 
         Map<Integer, Rational> zero = new HashMap<>();
-        zero.put(0, new Rational(0));
+        zero.put(0, ZERO);
         if (other.members == zero) {
             throw new ArithmeticException("the divisor is zero");
         }
@@ -167,47 +168,33 @@ public class Polynomial {
 
     private String sign(boolean isFirst, Rational coefficient) {
         if (coefficient.num() < 0) {
-            if (isFirst){
-                return "-";
-            }
-            return " - ";
+            return (isFirst) ? "-" : " - ";
         } else {
-            if (isFirst){
-                return "";
-            }
-            return " + ";
+            return (isFirst) ? "" : " + ";
         }
     }
 
     //Получение строкового представления коэффициента одночлена в зависимости от степени
-
     private String coefficient(Rational coefficient, int degree) {
-        if (!coefficient.abs().String().equals("1") || degree == 0) {
-            return coefficient.abs().String();
-        } else {
-            return "";
-        }
+        return (!coefficient.abs().equals(new Rational(1)) || degree == 0) ?
+            coefficient.abs().toString() : "";
     }
 
     //Получение строкового представления степени одночлена
 
     private String degree(int degree) {
         switch (degree) {
-            case 0:
-                return "";
-            case 1:
-                return "x";
-            case -1:
-                return "x";
-            default:
-                return "x^" + degree;
+            case 0: return "";
+            case 1: return "x";
+            case -1: return "x";
+            default: return "x^" + degree;
         }
     }
 
     @Override
     public String toString() {
         Map<Integer, Rational> zero = new HashMap<>();
-        zero.put(0, new Rational(0));
+        zero.put(0, ZERO);
         if (members == zero) {
             return "0";
         }

@@ -4,12 +4,10 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 public class PolynomialTest {
 
     @Test
-    public void equal() {
+    public void equals() {
         Map<Integer, Rational> members1 = new HashMap<>();
         members1.put(1, new Rational(-1));
         members1.put(4,new Rational(6));
@@ -34,7 +32,7 @@ public class PolynomialTest {
         Polynomial thirdPolynomial = new Polynomial(members3);
 
         System.out.println("Сравненеие первого полинома и суммы второго и третьего полиномов : "
-                + firstPolynomial.equal(secondPolynomial.plus(thirdPolynomial)));
+                + firstPolynomial.equals(secondPolynomial.plus(thirdPolynomial)));
     }
 
     @Test
@@ -51,9 +49,9 @@ public class PolynomialTest {
     @Test
     public void plus() {
         Map<Integer, Rational> members1 = new HashMap<>();
-        members1.put(1, new Rational(0));
-        members1.put(4,new Rational(0));
-        members1.put(6,new Rational(0));
+        members1.put(1, new Rational(-3));
+        members1.put(4,new Rational(-2));
+        members1.put(6,new Rational(7));
         Polynomial firstPolynomial = new Polynomial(members1);
 
         Map<Integer, Rational> members2 = new HashMap<>();
@@ -64,7 +62,7 @@ public class PolynomialTest {
         members2.put(4,new Rational(1));
         Polynomial secondPolynomial = new Polynomial(members2);
 
-        System.out.println(firstPolynomial);
+        System.out.println(members1);
 
         System.out.println(firstPolynomial.plus(secondPolynomial));
     }

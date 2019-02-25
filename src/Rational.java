@@ -1,5 +1,5 @@
 public class Rational {
-    private static Rational zero = new Rational(0, 1);
+    private final static Rational ZERO = new Rational(0);
 
     private int num;
     private int den;
@@ -25,10 +25,9 @@ public class Rational {
         den = 1;
     }
 
-    private int compareTo(Rational b) {
-        Rational a = this;
-        int lhs = a.num * b.den;
-        int rhs = a.den * b.num;
+    private int compareTo(Rational other) { //Comparable
+        int lhs = this.num * other.den;
+        int rhs = this.den * other.num;
         if (lhs < rhs) return -1;
         if (lhs > rhs) return +1;
         return 0;
@@ -56,8 +55,8 @@ public class Rational {
 
     public Rational plus(Rational b) {
         Rational a = this;
-        if (a.compareTo(zero) == 0) return b;
-        if (b.compareTo(zero) == 0) return a;
+        if (a.compareTo(ZERO) == 0) return b;
+        if (b.compareTo(ZERO) == 0) return a;
 
         int f = greatestCommonDivisor(a.num, b.num);
         int g = greatestCommonDivisor(a.den, b.den);
@@ -97,9 +96,9 @@ public class Rational {
         return new Rational(a.num * b, a.den);
     }
 
-    public String String() {
-        if (den == 1) return num + "";
-        else return num + "/" + den;
+    public boolean equals(Rational other)
+    {
+        return this.num == other.num && this.den == other.den;
     }
 
     @Override
