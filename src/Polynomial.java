@@ -30,8 +30,23 @@ public class Polynomial {
 
     //Сравнение двух полиномов на равенство
 
-    public boolean equals(Polynomial other) {
-        return this.members.toString().equals(other.members.toString());
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this)
+            return true;
+
+        if(obj == null)
+            return false;
+
+        if(!(getClass() == obj.getClass()))
+            return false;
+        else {
+            Polynomial tmp = (Polynomial) obj;
+            if (tmp.members.equals(this.members))
+                return true;
+            else
+                return false;
+        }
     }
 
     //Расчет значения полинома по заданному целому числу x
@@ -43,7 +58,7 @@ public class Polynomial {
             for (int i = degree; i > 0; i--) {
                 count *= x;
             }
-            result = result.plus(members.get(degree).multiplicationByAnInteger(count));
+            result = result.plus(members.get(degree).times(new Rational(count)));
         }
         return result;
     }
@@ -100,7 +115,7 @@ public class Polynomial {
         for (Map.Entry<Integer, Rational> i : this.members.entrySet()) {
             for (Map.Entry<Integer, Rational> j : other.members.entrySet()) {
                 Integer degree = i.getKey() + j.getKey();
-                Rational coefficient = i.getValue().multiply(j.getValue());
+                Rational coefficient = i.getValue().times(j.getValue());
                 if (result.get(degree) != null) {
                     coefficient = coefficient.plus(result.get(degree));
                 }
@@ -112,7 +127,7 @@ public class Polynomial {
 
     //Остаток от деления двух полиномов
 
-    public Polynomial residue(Polynomial other){
+    public Polynomial privateNum(Polynomial other){
 
         Map<Integer, Rational> zero = new HashMap<>();
         zero.put(0, ZERO);
@@ -128,6 +143,7 @@ public class Polynomial {
 
         Polynomial dividend = this;
         Polynomial residue = this;
+        Map<Integer, Rational> privateNumber = new HashMap<>();
 
         boolean f = true;
 
@@ -142,8 +158,8 @@ public class Polynomial {
             //Находим стпень(а) и коэффициент(b) одночлена, с помощью которого будем совершать деление(умножим его
             //на полином-делитель и вычтем из делимого полинома
 
-            Rational a = new Rational(coefficient.num() * coefficient1.den(),
-                    coefficient.den() * coefficient1.num());
+            Rational a = new Rational(coefficient.numerator() * coefficient1.denominator(),
+                    coefficient.denominator() * coefficient1.numerator());
             int b = degree - degree1;
 
             //В случае, когда степень полинома-делителя больше степени делимого полинома, назначаем
@@ -155,19 +171,24 @@ public class Polynomial {
 
             Map<Integer, Rational> monomial = new HashMap<>();
             monomial.put(b, a);
+            privateNumber.put(b, a);
             dividend = new Polynomial(monomial);
             dividend = residue.minus(other.multiply(dividend));
             residue = dividend;
             if (b == 0) f = false;
         }
-        return dividend;
+        return new Polynomial(privateNumber);
+    }
+
+    public Polynomial remainder(Polynomial other) {
+        return this.minus(other.multiply(this.privateNum(other)));
     }
 
     //Получение строкового представления знака одночлена в зависимости от его размещения
     //в полиноме и знака его коэффициента
 
     private String sign(boolean isFirst, Rational coefficient) {
-        if (coefficient.num() < 0) {
+        if (coefficient.numerator() < 0) {
             return (isFirst) ? "-" : " - ";
         } else {
             return (isFirst) ? "" : " + ";
@@ -175,6 +196,7 @@ public class Polynomial {
     }
 
     //Получение строкового представления коэффициента одночлена в зависимости от степени
+
     private String coefficient(Rational coefficient, int degree) {
         return (!coefficient.abs().equals(new Rational(1)) || degree == 0) ?
             coefficient.abs().toString() : "";
@@ -210,5 +232,4 @@ public class Polynomial {
         }
         return result.toString();
     }
-
 }
