@@ -1,7 +1,11 @@
 import java.util.*;
 
 public class Polynomial {
-    private final static Rational ZERO = new Rational(0);
+    private final static Rational RATIONAL_ZERO = new Rational(0);
+    private final static Map<Integer,Rational> MEMBERS_ZERO =
+            new HashMap<Integer, Rational>(){{put(0, new Rational(0));}};
+    private final static Polynomial POLYNOMIAL_ZERO =
+            new Polynomial(MEMBERS_ZERO);
 
     //Создаем Map, содержащую ключом степень одночлена полинома и значением
     //его коэффициент(сразу сортируем в порядке убывания)
@@ -19,7 +23,7 @@ public class Polynomial {
             if (pair.getKey() < 0) {
                 throw new ArithmeticException("a polynomial contains a degree that is less than zero");
             }
-            if (pair.getValue().equals(ZERO)){
+            if (pair.getValue().equals(RATIONAL_ZERO)){
                 pairs.remove();
             }
         }
@@ -52,7 +56,7 @@ public class Polynomial {
     //Расчет значения полинома по заданному целому числу x
 
     public Rational value(int x){
-        Rational result = ZERO;
+        Rational result = RATIONAL_ZERO;
         for (Integer degree: members.keySet()) {
             int count  = 1;
             for (int i = degree; i > 0; i--) {
@@ -129,9 +133,7 @@ public class Polynomial {
 
     public Polynomial privateNum(Polynomial other){
 
-        Map<Integer, Rational> zero = new HashMap<>();
-        zero.put(0, ZERO);
-        if (other.members == zero) {
+        if (other.members == MEMBERS_ZERO) {
             throw new ArithmeticException("the divisor is zero");
         }
 
@@ -146,6 +148,7 @@ public class Polynomial {
         Map<Integer, Rational> privateNumber = new HashMap<>();
 
         boolean f = true;
+        boolean isFirst = true;
 
         while(f) {
 
@@ -166,7 +169,9 @@ public class Polynomial {
             //остатком делимый полином
 
             if (b < 0) {
-                return this;
+                if (isFirst)
+                    return POLYNOMIAL_ZERO;
+                return new Polynomial(privateNumber);
             }
 
             Map<Integer, Rational> monomial = new HashMap<>();
@@ -175,6 +180,7 @@ public class Polynomial {
             dividend = new Polynomial(monomial);
             dividend = residue.minus(other.multiply(dividend));
             residue = dividend;
+            isFirst = false;
             if (b == 0) f = false;
         }
         return new Polynomial(privateNumber);
@@ -215,9 +221,7 @@ public class Polynomial {
 
     @Override
     public String toString() {
-        Map<Integer, Rational> zero = new HashMap<>();
-        zero.put(0, ZERO);
-        if (members == zero) {
+        if (members == MEMBERS_ZERO) {
             return "0";
         }
         boolean isFirst = true;
