@@ -33,6 +33,7 @@ public class Polynomial {
     }
 
     //Сравнение двух полиномов на равенство
+    //переопределение метода equals()
 
     @Override
     public boolean equals(Object obj) {
@@ -129,7 +130,7 @@ public class Polynomial {
         return new Polynomial(result);
     }
 
-    //Остаток от деления двух полиномов
+    //Результат деления двух полиномов
 
     public Polynomial privateNum(Polynomial other){
 
@@ -148,7 +149,6 @@ public class Polynomial {
         Map<Integer, Rational> privateNumber = new HashMap<>();
 
         boolean f = true;
-        boolean isFirst = true;
 
         while(f) {
 
@@ -169,8 +169,6 @@ public class Polynomial {
             //остатком делимый полином
 
             if (b < 0) {
-                if (isFirst)
-                    return POLYNOMIAL_ZERO;
                 return new Polynomial(privateNumber);
             }
 
@@ -180,11 +178,12 @@ public class Polynomial {
             dividend = new Polynomial(monomial);
             dividend = residue.minus(other.multiply(dividend));
             residue = dividend;
-            isFirst = false;
             if (b == 0) f = false;
         }
         return new Polynomial(privateNumber);
     }
+
+    //Остаток от деления полиномов
 
     public Polynomial remainder(Polynomial other) {
         return this.minus(other.multiply(this.privateNum(other)));
