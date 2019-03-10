@@ -1,5 +1,4 @@
 import org.junit.Test;
-import org.junit.Before;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,12 +26,12 @@ public class PolynomialTest {
         Polynomial secondPolynomial = new Polynomial(members2);
 
         Map<Integer, Rational> members3 = new HashMap<Integer, Rational>() {{
-             put(8, new Rational(0));
-             put(6, new Rational(11));
-             put(0, new Rational(-5));
-             put(1, new Rational(1));
-             put(2, new Rational(-1));
-             put(4, new Rational(5));
+            put(8, new Rational(0));
+            put(6, new Rational(11));
+            put(0, new Rational(-5));
+            put(1, new Rational(1));
+            put(2, new Rational(-1));
+            put(4, new Rational(5));
         }};
         Polynomial thirdPolynomial = new Polynomial(members3);
 
@@ -50,9 +49,13 @@ public class PolynomialTest {
         }};
         Polynomial firstPolynomial = new Polynomial(members1);
 
+        Map<Integer, Rational> members = new HashMap<>();
+        Polynomial polynomial = new Polynomial(members);
+
         assertEquals(new Rational(837970), firstPolynomial.value(7));
         assertEquals(new Rational(7060030), firstPolynomial.value(10));
         assertEquals(new Rational(30220), firstPolynomial.value(4));
+        assertEquals(new Rational(0), polynomial.value(4));
     }
 
     @Test

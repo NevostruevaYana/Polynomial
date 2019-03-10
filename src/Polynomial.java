@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Polynomial {
     private final static Rational RATIONAL_ZERO = new Rational(0);
-    private final static Map<Integer,Rational> MEMBERS_ZERO =
+    private final static Map<Integer, Rational> MEMBERS_ZERO =
             new HashMap<Integer, Rational>(){{put(0, new Rational(0));}};
     private final static Polynomial POLYNOMIAL_ZERO =
             new Polynomial(MEMBERS_ZERO);
@@ -204,7 +204,7 @@ public class Polynomial {
 
     private String coefficient(Rational coefficient, int degree) {
         return (!coefficient.abs().equals(new Rational(1)) || degree == 0) ?
-            coefficient.abs().toString() : "";
+                coefficient.abs().toString() : "";
     }
 
     //Получение строкового представления степени одночлена
@@ -230,7 +230,7 @@ public class Polynomial {
             int degree = monomial.getKey();
             result.append(sign(isFirst, coefficient)
                     + coefficient(coefficient, degree)
-                        + degree(degree));
+                    + degree(degree));
             isFirst = false;
         }
         return result.toString();
