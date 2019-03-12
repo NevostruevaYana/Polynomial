@@ -251,4 +251,21 @@ public class PolynomialTest {
         assertEquals(fourthPolynomial, firstPolynomial.remainder(thirdPolynomial));
         assertEquals("-116x^3 + 34x^2 + 10985/27x - 1708/9", firstPolynomial.toString());
     }
+
+    @Test(expected = Exception.class)
+    public void testException(){
+        Map<Integer, Rational> members1 = new HashMap<Integer, Rational>() {{
+            put(-3, new Rational(-116));
+            put(2, new Rational(34));
+            put(1, new Rational(10985, 27));
+            put(0, new Rational(-1708, 9));
+        }};
+        Polynomial firstPolynomial = new Polynomial(members1);
+
+        Map<Integer, Rational> members2 = new HashMap<>();
+        Polynomial secondPolynomial = new Polynomial(members2);
+
+        firstPolynomial.value(6);
+        firstPolynomial.remainder(secondPolynomial);
+    }
 }
