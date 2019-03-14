@@ -1,3 +1,7 @@
+package main;
+
+import main.Polynomial;
+import main.Rational;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -49,13 +53,19 @@ public class PolynomialTest {
         }};
         Polynomial firstPolynomial = new Polynomial(members1);
 
+        Map<Integer, Rational> members2 = new HashMap<Integer, Rational>() {{
+            put(1, new Rational(3));
+            put(4, new Rational(6));
+            put(6, new Rational(7));
+        }};
+
         Map<Integer, Rational> members = new HashMap<>();
         Polynomial polynomial = new Polynomial(members);
 
         assertEquals(new Rational(837970), firstPolynomial.value(7));
         assertEquals(new Rational(7060030), firstPolynomial.value(10));
         assertEquals(new Rational(30220), firstPolynomial.value(4));
-        assertEquals(new Rational(0), polynomial.value(4));
+        assertEquals(new Rational(0), polynomial.value(3));
     }
 
     @Test
@@ -267,5 +277,6 @@ public class PolynomialTest {
 
         firstPolynomial.value(6);
         firstPolynomial.remainder(secondPolynomial);
+        firstPolynomial.privateNum(secondPolynomial);
     }
 }

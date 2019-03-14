@@ -1,6 +1,8 @@
 //Copyright © 2000–2017, Robert Sedgewick and Kevin Wayne.
 //https://introcs.cs.princeton.edu/java/92symbolic/Rational.java.html
 
+package main;
+
 public class Rational implements Comparable<Rational> {
     private static Rational zero = new Rational(0, 1);
 

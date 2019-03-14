@@ -1,18 +1,45 @@
+package main;
+
+import com.sun.istack.internal.NotNull;
+
 import java.util.*;
+
+/**
+ * @author NevostruevaYana
+ * @version 1
+ *
+ * Полином, содержащий в качестве коэффициентов рациональные числа.
+ *
+ * Поле:    карта с неотрицательными ключами-степенями полинома и связанными
+ *          соответственно с ними рациональными значениями-коэффициентами.
+ *
+ * Методы:  сравнение двух полиномов на равенство,
+ *          подсчет значения при данном (целом) x,
+ *          сложение двух полиномов,
+ *          вычитание двух полиномов,
+ *          умножение двух полиномов,
+ *          деление двух полиномов,
+ *          нахождение остатка от деления двух полиномов.
+ */
 
 public class Polynomial {
     private final static Rational RATIONAL_ZERO = new Rational(0);
     private final static Map<Integer, Rational> MEMBERS_ZERO =
             new HashMap<Integer, Rational>(){{put(0, new Rational(0));}};
-    private final static Polynomial POLYNOMIAL_ZERO =
-            new Polynomial(MEMBERS_ZERO);
 
     //Создаем Map, содержащую ключом степень одночлена полинома и значением
     //его коэффициент(сразу сортируем в порядке убывания)
 
+    /**
+     * Поле карты, содежащей ключами степени, а значениями коэффициенты полинома.
+     */
     private Map<Integer, Rational> members = new TreeMap<>(Collections.reverseOrder());
 
-    public Polynomial(Map<Integer, Rational> members) {
+    /**
+     * Конструктор
+     * @param members Значение карты, содежащей ключами степени, а значениями коэффициенты полинома.
+     */
+    public Polynomial(@NotNull Map<Integer, Rational> members) {
         this.members.putAll(members);
 
         //Удаляем из полинома одночлены, коэффициенты которых равны нулю
@@ -20,43 +47,24 @@ public class Polynomial {
         Iterator<Map.Entry<Integer, Rational>> pairs = this.members.entrySet().iterator();
         while(pairs.hasNext()){
             Map.Entry<Integer, Rational> pair = pairs.next();
-            if (pair.getKey() < 0) {
+            if (pair.getKey() < 0)
                 throw new ArithmeticException("a polynomial contains a degree that is less than zero");
-            }
-            if (pair.getValue().equals(RATIONAL_ZERO)){
+            if (pair.getValue().equals(RATIONAL_ZERO))
                 pairs.remove();
-            }
         }
         if (0 == this.members.size()) {
             this.members.put(0,new Rational(0));
         }
     }
 
-    //Сравнение двух полиномов на равенство
-    //переопределение метода equals()
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this)
-            return true;
-
-        if(obj == null)
-            return false;
-
-        if(!(getClass() == obj.getClass()))
-            return false;
-        else {
-            Polynomial tmp = (Polynomial) obj;
-            if (tmp.members.equals(this.members))
-                return true;
-            else
-                return false;
-        }
-    }
-
-    //Расчет значения полинома по заданному целому числу x
-
+    /**
+     * Расчет значения полинома по заданному целому числу x
+     * @param x Значение, по которому рассчитывается конечное целое значение полинома
+     * @return Значение полинома при заданном (целом) x, <b>null</b>, если исходный полином равен null
+     */
     public Rational value(int x){
+        if (this.members == null)
+            return null;
         Rational result = RATIONAL_ZERO;
         for (Integer degree: members.keySet()) {
             int count  = 1;
@@ -68,8 +76,11 @@ public class Polynomial {
         return result;
     }
 
-    //Сложение двух полиномов
-
+    /**
+     * Сложение двух полиномов
+     * @param other Суммируемый полинома
+     * @return Результат сложения двух полиномов, <b>null</b>, если исходный полином равен null
+     */
     public Polynomial plus(Polynomial other){
         Map<Integer, Rational> members = new HashMap();
         members.putAll(this.members);
@@ -91,9 +102,12 @@ public class Polynomial {
         return new Polynomial(members);
     }
 
-    //Вычитание двух полиномов
-
-    public Polynomial minus(Polynomial other){
+    /**
+     * Вычитание двух полиномов
+     * @param other Вычитаемый полином
+     * @return Результат операции вычитания двух полиномов, <b>null</b>, если исходный полином равен null
+     */
+    public Polynomial minus( Polynomial other){
         Map<Integer, Rational> members = new HashMap();
         members.putAll(this.members);
         for (Integer degree : other.members.keySet()){
@@ -113,8 +127,11 @@ public class Polynomial {
         return new Polynomial(members);
     }
 
-    //Перемножение двух полиномов
-
+    /**
+     * Перемножение двух полиномов
+     * @param other Умножаемый полином
+     * @return Результат операции вычитания двух полиномов, <b>null</b>, если исходный полином равен null
+     */
     public Polynomial multiply(Polynomial other) {
         Map<Integer, Rational> result = new HashMap();
         for (Map.Entry<Integer, Rational> i : this.members.entrySet()) {
@@ -130,8 +147,11 @@ public class Polynomial {
         return new Polynomial(result);
     }
 
-    //Результат деления двух полиномов
-
+    /**
+     * Деление двух полиномов
+     * @param other Полином делитель
+     * @return Результат операции деления двух полиномов, <b>null</b>, если исходный полином равен null
+     */
     public Polynomial privateNum(Polynomial other){
 
         if (other.members == MEMBERS_ZERO) {
@@ -183,14 +203,17 @@ public class Polynomial {
         return new Polynomial(privateNumber);
     }
 
-    //Остаток от деления полиномов
-
+    /**
+     * Остаток от деления двух полиномов
+     * @param other Делимый полином
+     * @return  Остаток от деления двух полиномов, <b>null</b>, если исходный полином равен null
+     */
     public Polynomial remainder(Polynomial other) {
         return this.minus(other.multiply(this.privateNum(other)));
     }
 
     //Получение строкового представления знака одночлена в зависимости от его размещения
-    //в полиноме и знака его коэффициента
+    //в полиноме и знака его коэффициента.
 
     private String sign(boolean isFirst, Rational coefficient) {
         if (coefficient.numerator() < 0) {
@@ -200,14 +223,14 @@ public class Polynomial {
         }
     }
 
-    //Получение строкового представления коэффициента одночлена в зависимости от степени
+    //Получение строкового представления коэффициента одночлена в зависимости от степени.
 
     private String coefficient(Rational coefficient, int degree) {
         return (!coefficient.abs().equals(new Rational(1)) || degree == 0) ?
                 coefficient.abs().toString() : "";
     }
 
-    //Получение строкового представления степени одночлена
+    //Получение строкового представления степени одночлена.
 
     private String degree(int degree) {
         switch (degree) {
@@ -215,6 +238,25 @@ public class Polynomial {
             case 1: return "x";
             case -1: return "x";
             default: return "x^" + degree;
+        }
+    }
+
+    @Override
+    public boolean equals(@NotNull Object obj) {
+        if(obj == this)
+            return true;
+
+        if(obj == null)
+            return false;
+
+        if(!(getClass() == obj.getClass()))
+            return false;
+        else {
+            Polynomial tmp = (Polynomial) obj;
+            if (tmp.members.equals(this.members))
+                return true;
+            else
+                return false;
         }
     }
 
