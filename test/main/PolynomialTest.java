@@ -1,7 +1,5 @@
 package main;
 
-import main.Polynomial;
-import main.Rational;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -275,8 +273,18 @@ public class PolynomialTest {
         Map<Integer, Rational> members2 = new HashMap<>();
         Polynomial secondPolynomial = new Polynomial(members2);
 
+        Map<Integer, Rational> members3 = new HashMap<Integer, Rational>() {{
+            put(6, new Rational(-4));
+            put(0, new Rational(5));
+            put(2, null);
+            put(1, new Rational(-2));
+            put(4, new Rational(1));
+        }};
+        Polynomial thirdPolynomial = new Polynomial(members2);
+
         firstPolynomial.value(6);
         firstPolynomial.remainder(secondPolynomial);
         firstPolynomial.privateNum(secondPolynomial);
+        thirdPolynomial.value(5);
     }
 }

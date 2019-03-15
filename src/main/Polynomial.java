@@ -37,10 +37,21 @@ public class Polynomial {
 
     /**
      * Конструктор
+     *
      * @param members Значение карты, содежащей ключами степени, а значениями коэффициенты полинома.
+     *
+     * @throws NullPointerException
+     *         Если значение равно null в {@code members}
+     *
+     * @throws ArithmeticException
+     *         Если в {@code members} хоть один из ключей меньше нуля
      */
     public Polynomial(@NotNull Map<Integer, Rational> members) {
         this.members.putAll(members);
+        for (Rational a: this.members.values()) {
+            if (a == null)
+                throw new NullPointerException("coefficient is equal to null");
+        }
 
         //Удаляем из полинома одночлены, коэффициенты которых равны нулю
 
